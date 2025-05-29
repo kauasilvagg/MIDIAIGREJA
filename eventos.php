@@ -2,7 +2,7 @@
 <?php include 'conexao.php'; ?>
 
 <?php
-$result = $conn->query("SELECT * FROM eventos ORDER BY data ASC, hora ASC");
+$result = $conn->query("SELECT * FROM eventos ORDER BY `data` ASC, `hora` ASC");
 ?>
 
 <main>

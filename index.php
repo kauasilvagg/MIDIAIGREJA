@@ -1,8 +1,14 @@
+<?php include 'registro_acesso.php'; ?>
+
 <?php include 'header.php'; ?>
 <?php
 include 'conexao.php';
 $ip = $_SERVER['REMOTE_ADDR'];
-$conn->query("INSERT INTO acessos (ip) VALUES ('$ip')");
+$stmt = $conn->prepare("INSERT INTO acessos (ip) VALUES (?)");
+$stmt->bind_param("s", $ip);
+$stmt->execute();
+
+
 ?>
 
 <!DOCTYPE html>

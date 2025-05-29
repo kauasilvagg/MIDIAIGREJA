@@ -1,6 +1,5 @@
-
+<?php include 'registro_acesso.php'; ?>
 <?php
-
 include 'conexao.php';
 $result = $conn->query("SELECT * FROM contatos ORDER BY data_envio DESC");
 
