@@ -1,198 +1,111 @@
-<?php include 'header.php'; ?>
-<?php include 'conexao.php'; ?>
-
 <?php
-$result = $conn->query("SELECT * FROM eventos ORDER BY `data` ASC, `hora` ASC");
+session_start();
+include 'conexao.php';
+
+// Verifica se é admin
+$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario'] === 'admin';
+
+// Consulta eventos
+$result = $conn->query("SELECT * FROM eventos ORDER BY data ASC, hora ASC");
+
+if (!$result) {
+    die("Erro ao buscar eventos: " . $conn->error);
+}
 ?>
 
-<main>
-    <nav>
-  <a href="index.php">Início</a>
-  <a href="eventos.php">Eventos</a>
-  <a href="contato.php">Contato</a>
-  <a href="sobre.php">Sobre</a>
-  <a href="biblia.php">Bíblia</a>
-</nav>
-    <?php if (isset($_GET['sucesso']) && $_GET['sucesso'] == 1): ?>
-    <div class="mensagem-sucesso">
-        ✅ Evento cadastrado com sucesso!
-    </div>
-<?php endif; ?>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Eventos da Igreja</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .evento-card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 15px;
+        }
+        .evento-header {
+            background-color: #007bff;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+    </style>
+</head>
+<body>
 
-    <div class="container-principal">
-        <h1>Eventos e Cultos da Igreja</h1>
-        <p>Acompanhe e gerencie os próximos cultos e eventos da Assembleia de Deus Shalom.</p>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">📅 Eventos da Igreja Shalom</h1>
 
-        <div class="botoes-gerais">
-            <a href="cadastrar-evento.php" class="botao-cadastrar">+ Cadastrar Novo Evento</a>
+    <?php if ($isAdmin): ?>
+        <div class="text-end mb-4">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEvento">➕ Novo Evento</button>
         </div>
+    <?php endif; ?>
 
-    <div class="eventos-lista">
-    <?php if ($result->num_rows > 0): ?>
+    <div class="row">
         <?php while ($evento = $result->fetch_assoc()): ?>
-            <div class="container-evento">
-                <div class="evento">
-                    <h3><?= htmlspecialchars($evento['titulo']) ?></h3>
-                    <p><strong>Data:</strong> <?= date("d/m/Y", strtotime($evento['data'])) ?> às <?= substr($evento['hora'], 0, 5) ?></p>
-                    <p><?= nl2br(htmlspecialchars($evento['descricao'])) ?></p>
-                    <a href="processa-evento.php?excluir=<?= $evento['id'] ?>" class="botao-excluir" onclick="return confirm('Tem certeza que deseja excluir este evento?')">Excluir</a>
+            <div class="col-md-6 col-lg-4">
+                <div class="card evento-card">
+                    <div class="card-header evento-header">
+                        <h5 class="card-title mb-0"><?= htmlspecialchars($evento['nome']) ?></h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><?= nl2br(htmlspecialchars($evento['descricao'])) ?></p>
+                        <p class="text-muted">
+                            📅 <strong>Data:</strong> <?= date('d/m/Y', strtotime($evento['data'])) ?><br>
+                            ⏰ <strong>Hora:</strong> <?= date('H:i', strtotime($evento['hora'])) ?>
+                        </p>
+                        <?php if ($isAdmin): ?>
+                            <a href="editar_evento.php?id=<?= $evento['id'] ?>" class="btn btn-sm btn-warning">Editar</a>
+                            <a href="excluir_evento.php?id=<?= $evento['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         <?php endwhile; ?>
-    <?php else: ?>
-        <p style="text-align:center; color: #666;">Nenhum evento cadastrado no momento.</p>
-    <?php endif; ?>
+    </div>
 </div>
 
-
-</main>
-<div class="botoes-gerais">
-    <a href="index.php" class="botao-voltar">← Voltar para Início</a>
+<!-- Modal para adicionar evento -->
+<div class="modal fade" id="modalEvento" tabindex="-1" aria-labelledby="modalEventoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="registrar_evento.php">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Novo Evento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Evento</label>
+                        <input type="text" class="form-control" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data" class="form-label">Data</label>
+                        <input type="date" class="form-control" name="data" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hora" class="form-label">Hora</label>
+                        <input type="time" class="form-control" name="hora" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
-
-<style>
-.botao-voltar {
-    display: inline-block;
-    background-color: #888;
-    color: red;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 8px;
-    margin-left: 1rem;
-    transition: background-color 0.3s;
-    font-weight: bold;
-}
-
-.botao-voltar:hover {
-    background-color: red;
-}
-
-
-.botao-voltar {
-    display: inline-block;
-    background-color: #888;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 8px;
-    margin-left: 1rem;
-    transition: background-color 0.3s;
-    font-weight: bold;
-}
-
-.botao-voltar:hover {
-    background-color: #555;
-}
-
-
-.mensagem-sucesso {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 20px;
-    border: 1px solid #c3e6cb;
-    animation: fadeIn 0.5s ease-in;
-}
-
-
-main {
-    background: #f5f9fc;
-    padding: 3rem 1rem;
-    min-height: 80vh;
-}
-
-.container-principal {
-    max-width: 900px;
-    margin: auto;
-    background: white;
-    padding: 2rem 3rem;
-    border-radius: 20px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    animation: fadeIn 0.8s ease-in;
-}
-
-.container-principal h1 {
-    color: #004080;
-    margin-bottom: 1rem;
-    text-align: center;
-}
-
-.container-principal p {
-    font-size: 1.1rem;
-    color: #444;
-    text-align: center;
-}
-
-.botoes-gerais {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.botao-cadastrar {
-    background-color: #004080;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-    font-weight: bold;
-}
-
-.botao-cadastrar:hover {
-    background-color:rgb(0, 92, 6);
-}
-
-.eventos-lista .evento {
-    background: #eaf2fb;
-    border-left: 5px solid #004080;
-    padding: 1rem 1.5rem;
-    border-radius: 10px;
-    margin: 1rem 0;
-    position: relative;
-}
-
-.evento h3 {
-    color: #003366;
-    margin-bottom: 0.5rem;
-}
-
-.botao-excluir {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background-color: #c62828;
-    color: white;
-    padding: 5px 12px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-}
-
-.botao-excluir:hover {
-    background-color: #a71d1d;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.container-evento {
-    max-width: 700px;
-    margin: 0 auto 1.5rem auto;
-    padding: 0 1rem;
-}
-
-@media (max-width: 768px) {
-    .container-evento {
-        padding: 0 0.5rem;
-    }
-}
-
-</style>
-<?php include 'footer.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
