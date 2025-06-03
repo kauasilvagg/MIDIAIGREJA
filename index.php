@@ -1,15 +1,36 @@
 <?php include 'registro_acesso.php'; ?>
 
-<?php include 'header.php'; ?>
-<?php
-include 'conexao.php';
-$ip = $_SERVER['REMOTE_ADDR'];
-$stmt = $conn->prepare("INSERT INTO acessos (ip) VALUES (?)");
-$stmt->bind_param("s", $ip);
-$stmt->execute();
+<?php include('conexao.php'); include('../includes/header.php'); ?>
 
+<div class="container mt-4">
+    <h1 class="text-primary">Bem-vindo ao Portal da Igreja Shalom</h1>
 
-?>
+    <div class="alert alert-info mt-4" role="alert">
+        <strong>Versículo do Dia:</strong>
+        <?php
+         $versiculo = mysqli_query($conn, "SELECT texto FROM versiculos ORDER BY id DESC LIMIT 1");
+
+            echo ($row = mysqli_fetch_assoc($versiculo)) ? $row['texto'] : "Ainda não há versículo para hoje.";
+        ?>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            Mural de Avisos
+        </div>
+        <div class="card-body">
+            <?php
+            $avisos = mysqli_query($conn, "SELECT * FROM mural_avisos ORDER BY data_publicacao DESC LIMIT 5");
+
+                while ($aviso = mysqli_fetch_assoc($avisos)) {
+                    echo "<p><strong>{$aviso['titulo']}:</strong> {$aviso['mensagem']}</p>";
+                }
+            ?>
+        </div>
+    </div>
+</div>
+
+<?php include('../includes/footer.php'); ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,15 +38,39 @@ $stmt->execute();
   <meta charset="UTF-8">
   <title>Início - Igreja Assembleia de Deus Shalom</title>
   <style>
+    .card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+
+
+  body {
+  background: url('https://2.bp.blogspot.com/-6u3yysSx-G4/VCC74auXZ7I/AAAAAAAAJcI/j9eIpV4iKY4/s1600/_EDP1244edt1a.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+  main {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  margin: 2rem;
+  padding: 2rem;
+}
+
+
 .botao-eventos {
     display: inline-block;
     padding: 0.9rem 2rem;
-    background: linear-gradient(135deg, #004080, #0066cc);
+    background: linear-gradient(135deg,rgb(42, 0, 251), #0066cc);
     color: white;
     font-weight: bold;
     text-decoration: none;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+    box-shadow: 0 4px 15px rgba(141, 174, 208, 0.3);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
@@ -42,18 +87,18 @@ $stmt->execute();
       margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to right, #e6f0ff, #f0f8ff);
-      color: #003366;
+      color:rgb(0, 128, 255);
     }
 
     header {
-      background-color: #004080;
+      background-color:rgb(152, 197, 241);
       color: white;
       padding: 1.2rem 0;
       text-align: center;
     }
 
     nav {
-      background-color: #002d5c;
+      background-color:rgb(19, 111, 204);
       padding: 0.6rem 0;
       text-align: center;
     }
@@ -155,7 +200,6 @@ $stmt->execute();
   </div>
 </main>
 
-<?php include 'footer.php'; ?>
 <footer>
   © <?php echo date("Y"); ?> Igreja Assembleia de Deus Shalom - Todos os direitos reservados
 </footer>

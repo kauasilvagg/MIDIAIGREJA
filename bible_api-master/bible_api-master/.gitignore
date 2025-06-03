@@ -1,5 +1,0 @@
-log
-tmp
-config/newrelic.yml
-.bundle
-.env

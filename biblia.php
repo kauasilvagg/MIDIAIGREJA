@@ -25,6 +25,28 @@ $versiculos = $livros[$livroSelecionado][$capituloSelecionado] ?? [];
     <meta charset="UTF-8">
     <title>Leitura Bíblica</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg,rgb(170, 189, 234), #f0f7ff);
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .form-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .btn-custom {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body class="bg-light p-4">
 

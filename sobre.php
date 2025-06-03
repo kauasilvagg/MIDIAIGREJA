@@ -8,12 +8,21 @@
 
         <!-- Botão de voltar -->
         <a href="index.php" class="btn-voltar">← Voltar para Início</a>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d370.66912336458216!2d-44.20553500361856!3d-2.5196126855948213!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f691772939efbd%3A0x13b3b5f4c8dda21f!2sAssembleia%20de%20Deus%20Cristo%20para%20Todos!5e0!3m2!1spt-BR!2sbr!4v1748889111217!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 </main>
 
 <style>
+    .mapa-container {
+    margin-top: 2rem;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
 main {
-    background:rgb(58, 145, 211);
+    background:rgb(140, 194, 236);
     padding: 3rem 1rem;
     min-height: 80vh;
 }
