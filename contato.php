@@ -73,6 +73,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container py-5">
     <h2 class="text-center mb-4">Entre em Contato</h2>
 
+    <style>
+    body {
+      background: linear-gradient(to right, #f2f9ff, #e6f0ff);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    nav a {
+      color: white !important;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      background-color: #f0f0f0;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 4rem;
+    }
+  </style>
+
+
     <?php if ($sucesso): ?>
         <div class="alert alert-success d-flex align-items-center" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" fill="currentColor">
