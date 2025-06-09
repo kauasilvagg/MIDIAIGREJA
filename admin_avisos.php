@@ -22,8 +22,11 @@
         }
     </style>
 </head>
+
 <body>
+    
     <div class="container mt-5">
+        
         <div class="card p-4">
             <h2 class="mb-4 text-primary"><i class="bi bi-megaphone-fill"></i> Cadastrar Aviso no Mural</h2>
             

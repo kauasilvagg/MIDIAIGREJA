@@ -26,9 +26,7 @@ if (!isset($_SESSION['admin'])) {
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_inscricoes.php">Inscrições</a>
-                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="admin_avisos.php">Mural de Avisos</a>
                     </li>
@@ -36,7 +34,13 @@ if (!isset($_SESSION['admin'])) {
                         <a class="nav-link" href="admin_versiculos.php">Versículos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="logout.php">Sair</a>
+                        <a class="nav-link text-danger" href="eventos.php">Eventos</a>
+
+                    <li class="nav-item">
+                    <a class="nav-link text-danger" href="logout.php">Sair</a>
+                    
+                    <li class="nav-item">
+                    <a class="nav-link text-danger" href="dashboard.php">Ver Dashboard</a>
                     </li>
                 </ul>
             </div>

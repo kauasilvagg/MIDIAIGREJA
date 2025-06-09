@@ -4,16 +4,21 @@ include('conexao.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['entrar'])) {
     $usuario = mysqli_real_escape_string($conn, $_POST['usuario']);
-    $senha = mysqli_real_escape_string($conn, $_POST['senha']);
+    $senha = $_POST['senha'];
 
-    // Verifique as credenciais
-    $query = "SELECT * FROM administradores WHERE usuario = '$usuario' AND senha = '$senha'";
+    $query = "SELECT * FROM administradores WHERE usuario = '$usuario'";
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) == 1) {
-        $_SESSION['admin'] = $usuario;
-        header("Location: admin_inscricoes.php");
-        exit();
+        $admin = mysqli_fetch_assoc($result);
+
+        if (password_verify($senha, $admin['senha'])) {
+            $_SESSION['admin'] = $usuario;
+            header("Location: admin_inscricoes.php");
+            exit();
+        } else {
+            $erro = "Usuário ou senha inválidos.";
+        }
     } else {
         $erro = "Usuário ou senha inválidos.";
     }
@@ -34,10 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['entrar'])) {
                 <h4>Login do Administrador</h4>
             </div>
             <div class="card-body">
-                <?php if (isset($erro)) { ?>
-                    <div class="alert alert-danger"><?php echo $erro; ?></div>
-                <?php } ?>
+                <?php if (isset($erro)) echo "<div class='alert alert-danger'>$erro</div>"; ?>
+                <?php if (isset($_GET['cadastro']) && $_GET['cadastro'] == 'sucesso') {
+                    echo "<div class='alert alert-success'>Cadastro realizado com sucesso! Faça login abaixo.</div>";
+                } ?>
 
+                
                 <form method="POST">
                     <div class="mb-3">
                         <label for="usuario" class="form-label">Usuário</label>
